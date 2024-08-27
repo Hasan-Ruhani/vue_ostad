@@ -1,0 +1,32 @@
+//........... inertia setup for server side
+1. go to inertia.js for server side setup (https://inertiajs.com/server-side-setup)
+   => command in root directory (composer require inertiajs/inertia-laravel),
+   => set Root template in laravel->views/app.blade.php(create) then pest html template that provide inertia.js documentation
+
+2. create middleware for tag inertia with laravel (php artisan inertia:middleware)
+   => go to kernel.php and set middleware in web property (\App\Http\Middleware\HandleInertiaRequests::class;)
+//............ end inertia setup for server side setup
+
+//............ inertia setup for client
+1. go to inertia.js for client side setup (https://inertiajs.com/client-side-setup)
+   => command in root directory for vue3 (npm install @inertiajs/vue3),
+   => go to resource->js->app.js for "Initialize the Inertia app" then pest necessary code that provide inertia.js documentation
+//............ end inertia setup for client side setup
+
+// .......... use inertia so need vite plugin for tag inertia with laravel
+1. go to vite plugin vue for install plugin (https://www.npmjs.com/package/@vitejs/plugin-vue)
+   => command in root directory (npm i @vitejs/plugin-vue),
+   => setup "vite.config.js" in laravel according to "vite plugin vue" documentation
+//........... end setup for "vite plugin vue"
+
+//........... pages setup
+1. in laravel->resources/js->create "Pages" folder,
+   => in "Pages" folder create any vue component for using frontend and it control by laravel controller. vue component like this "page1.vue"
+//........... end pages setup
+
+//............................... oky now laravel is ready for using inertia.js features
+
+
+
+
+

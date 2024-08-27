@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css?family=Mada:400,500,600,700&display=swap');
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.admin-header {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+    padding: 0px 10px;
+}
+
+.card-title {
+    margin-bottom: .75rem;
+    padding: 20px;
+}
+
+p.text-muted.mb-0 {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+button.btn.btn-sm.bg-green-light.mr-2 {
+    background: rgb(2 182 119 / 22%) !important;
+    color: green;
+}
+
+.skillAddBlock{
+    height: 250px;
+    border-radius: 5px;
+    border: 1px solid #eaeaea;
+    position: relative;
+}
+
+.skillWidth{
+    height: 200px;
+    padding: 10px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 7px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    overflow-y: scroll;
+}
+
+/* Custom Scrollbar */
+.skillWidth::-webkit-scrollbar {
+    width: 5px;
+}
+
+.skillWidth::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.skillWidth::-webkit-scrollbar-thumb {
+    background: #00d1f155;
+    border-radius: 5px;
+}
+
+.skillWidth::-webkit-scrollbar-thumb:hover {
+    background: #00d1f187;
+}
+
+.wrapSkillDiv{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 19px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #fff;
+}
+
+.forminputSkill{
+    padding: 10px 19px;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+}
+
+.skillItem{
+    background-color: #d4d4d4;
+    color: rgb(50, 50, 50);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 13px;
+    font-size: 14px;
+    width: fit-content;
+    border-radius: 9px;
+}
+
+.modal-dialog.modal-dialog-centered.detailsModal {
+    max-width: 1000px;
+}
+
+.ori-team-details-social a {
+    color: #fff;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    margin-right: 10px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    background-color: #202020;
+}
