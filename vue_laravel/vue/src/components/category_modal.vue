@@ -1,6 +1,6 @@
 <script setup>
 
-//commit from inertia_laravel
+//commit from vue_laravel
     import { ref, defineExpose } from 'vue';
     import axios from 'axios';
     import { showToast } from '../../utils/Toast';
