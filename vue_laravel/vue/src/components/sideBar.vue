@@ -1,7 +1,5 @@
 <script setup>
 
-import { Link } from '@inertiajs/vue3';
-
 </script>
 
 <template>
@@ -26,8 +24,8 @@ import { Link } from '@inertiajs/vue3';
                 aria-hidden="true"
               ></span> -->
 
-              <Link class="inline-flex items-center w-full text-sm font-semibold text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100" 
-                href="/dashboard">
+              <RouterLink class="inline-flex items-center w-full text-sm font-semibold text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100" 
+              :to="{ name: 'dashboard' }">
 
                 <svg
                   class="w-5 h-5"
@@ -44,16 +42,16 @@ import { Link } from '@inertiajs/vue3';
                   ></path>
                 </svg>
                 <span class="ml-4">Dashboard</span>
-              </Link>
+              </RouterLink>
   
             </li>
           </ul>
           <ul>
 
             <li class="relative px-6 py-3">
-              <Link
+              <RouterLink
                 class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                href="/projects"
+                :to="{ name: 'projects' }"
               >
                 <svg
                   class="w-5 h-5"
@@ -70,7 +68,7 @@ import { Link } from '@inertiajs/vue3';
                   ></path>
                 </svg>
                 <span class="ml-4">Projects</span>
-              </Link>
+              </RouterLink>
             </li>
 
 

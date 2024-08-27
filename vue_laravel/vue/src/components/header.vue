@@ -1,8 +1,6 @@
 <script setup>
-    import axios from 'axios';
-    import { router } from '@inertiajs/vue3';
+    import { auth } from '../store/auth'
     import { ref, onMounted, onBeforeUnmount } from 'vue';
-    import { showToast } from '../../utils/Toast';
 
     const isOpen = ref(false);
 
@@ -25,28 +23,28 @@
     });
     
 
-    function logout() {
-      axios.get('/user-logout')
-          .then(response => {
-              const { status, message } = response.data;
+    // function logout() {
+    //   axios.get('/user-logout')
+    //       .then(response => {
+    //           const { status, message } = response.data;
 
-              if (status === 'success') {
-                  showToast('success', message); 
-                  setTimeout(() => {
-                      router.visit('/login'); 
-                  }, 1000); 
-              }
-          })
-          .catch(error => {
-              if (error.response && error.response.data && error.response.data.errors) {
-                  error.response.data.errors.forEach(err => {
-                      showToast('error', err);
-                  });
-              } else {
-                  showToast('error', 'Network problem!!');
-              }
-          });
-      }
+    //           if (status === 'success') {
+    //               showToast('success', message); 
+    //               setTimeout(() => {
+    //                   router.visit('/login'); 
+    //               }, 1000); 
+    //           }
+    //       })
+    //       .catch(error => {
+    //           if (error.response && error.response.data && error.response.data.errors) {
+    //               error.response.data.errors.forEach(err => {
+    //                   showToast('error', err);
+    //               });
+    //           } else {
+    //               showToast('error', 'Network problem!!');
+    //           }
+    //       });
+    //   }
 
 
 </script>
@@ -136,7 +134,7 @@
                   </li>
                   <li>
                     
-                    <a href="#" @click="logout()" class="block  text-white px-4 py-2 text-sm text-gray-700 hover:bg-gray-400">
+                    <a href="#" @click="auth.logout()" class="block  text-white px-4 py-2 text-sm text-gray-700 hover:bg-gray-400">
                       Logout
                     </a>
                   </li>

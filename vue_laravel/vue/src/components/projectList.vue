@@ -1,72 +1,5 @@
 <script setup>
 
-  import { ref, computed, onBeforeMount } from 'vue';
-  import axios from 'axios';
-  import { showToast } from '../../utils/Toast';
-  import { Link } from '@inertiajs/vue3';
-
-  // const onClickHandler = (page: number) => {
-  //   console.log(page);
-  // };
-
-  const currentPage = ref(1);
-
-  const projects = ref([]);
-
-  const formattedDate = computed(() => {
-    if (projects.value.length > 0) {
-      const date = new Date(projects.value[0].created_at);
-      return date.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-      });
-    }
-    return '';
-  });
-
-  function fetchAllProjects() {
-    axios.get('/admin/allPortfolio')
-        .then(response => {
-            if (response.status === 200 && response.data && Array.isArray(response.data.data)) {
-                // Extract the first image for each project
-                projects.value = response.data.data.map(project => ({
-                    ...project,
-                    firstImage: project.images.length > 0 ? project.images[0].filename : ''
-                }));
-            } else {
-              showToast('error', 'Network problem!!');
-            }
-        })
-        .catch(error => {
-          showToast('error', 'May be server down');
-        });
-    }
-
-
-    onBeforeMount(fetchAllProjects);
-
-
-  // Method to toggle the status
-  const toggleStatus = (id, currentStatus) => {
-    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
-
-    axios.post(`/portfolio/status/${id}`, { status: newStatus })
-      .then(response => {
-        if (response.data.status === 'success') {
-          const project = projects.value.find(p => p.id === id);
-          if (project) {
-            project.status = newStatus;
-          }
-          showToast('success', `Project now ${newStatus}`);
-        } else {
-          showToast('error', 'Failed to update status');
-        }
-      })
-      .catch(error => {
-        showToast('error', 'Network problem!!');
-      });
-  };
 
 </script>
 
@@ -111,29 +44,29 @@
               </tr>
             </thead>
             <!-- <div v-for="product in products" :key="product.id" class="group relative"></div> -->
-            <tbody v-for="project in projects" :key="project.id" 
+            <tbody  
               class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
 
               <tr class="text-gray-700 dark:text-gray-400 border-b-[0.5px] border-gray-700">
 
                 <td class="px-4 py-3 text-sm">
-                  {{ project.head_line }}
+                  head_line
                 </td>
                 
                 <td class="px-4 py-3 text-sm">
-                  {{ project.duration }}
+                  duration
                 </td>
 
                 <td class="px-4 py-3 text-sm">
-                  {{ project.client }}
+                  client
                 </td>
 
                 <td class="px-4 py-3">
                   <div class="flex items-center text-sm">
-                  <div v-if="project.firstImage" class="relative hidden md:block">
+                  <div class="relative hidden md:block">
                       <img
                           class="object-cover w-20 h-10 rounded-[10px]"
-                          :src="project.firstImage"
+                          src="#"
                           alt="Project image"
                           loading="lazy"
                       />
@@ -144,15 +77,14 @@
                 </td>
 
                 <td class="px-4 py-3 text-sm">
-                    {{ formattedDate }}
+                    Date
                 </td>
 
                 <td class="px-4 py-3 text-xs">
                   <label class="inline-flex items-center cursor-pointer">
                     <input 
                       type="checkbox" 
-                      :checked="project.status === 'active'" 
-                      @change="toggleStatus(project.id, project.status)" 
+                      
                       class="sr-only peer"
                     >
                     <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -178,13 +110,6 @@
             </tbody>
           </table>
         </div>
-        <vue-awesome-paginate
-    :total-items="50"
-    :items-per-page="5"
-    :max-pages-shown="5"
-    v-model="currentPage"
-    @click="onClickHandler"
-  />
       </div>
     </div>
   </main>

@@ -1,9 +1,9 @@
 <script setup>
-  import {RouterView } from 'vue-router'
+    import test from '../components/test.vue';
 </script>
 
 <template>
-  <RouterView/>
+    <test/>
 </template>
 
 <style scoped>
