@@ -1,5 +1,18 @@
 <script setup>
+  import axios from 'axios'
+  import { serverURL } from '../store/server'
+  import { ref, onBeforeMount } from 'vue'
 
+  const projects = ref([])
+
+  onBeforeMount(() => {
+    axios.get(`${serverURL}/admin/allPortfolio`, {
+        withCredentials: 'include',
+    })
+    .then(res => {
+      projects.value = res.data.data;
+    })
+  });
 
 </script>
 
@@ -18,12 +31,12 @@
       </h2>
       
       <div class="my-5">
-        <Link href="/create-project"
+        <RouterLink :to="{ name: 'createProject' }"
           class="flex items-center justify-between w-[150px]  px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
         >
           Create project
           <span class="ml-2" aria-hidden="true">+</span>
-        </Link>
+        </RouterLink>
       </div>
 
       <!-- New Table -->
@@ -44,40 +57,38 @@
               </tr>
             </thead>
             <!-- <div v-for="product in products" :key="product.id" class="group relative"></div> -->
-            <tbody  
+            <tbody v-for="project in projects" :key="project.id"
               class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
 
               <tr class="text-gray-700 dark:text-gray-400 border-b-[0.5px] border-gray-700">
 
                 <td class="px-4 py-3 text-sm">
-                  head_line
+                  {{ project.head_line }}
                 </td>
                 
                 <td class="px-4 py-3 text-sm">
-                  duration
+                  {{ project.duration }}
                 </td>
 
                 <td class="px-4 py-3 text-sm">
-                  client
+                  {{ project.client }}
                 </td>
 
                 <td class="px-4 py-3">
                   <div class="flex items-center text-sm">
-                  <div class="relative hidden md:block">
-                      <img
-                          class="object-cover w-20 h-10 rounded-[10px]"
-                          src="#"
-                          alt="Project image"
-                          loading="lazy"
-                      />
+                    <div class="relative hidden md:block">
+                        <img
+                            class="object-cover w-20 h-10 rounded-[10px]"
+                            src="#"
+                            alt="Project image"
+                            loading="lazy"
+                        />
+                    </div>
                   </div>
-              </div>
-
-
                 </td>
 
                 <td class="px-4 py-3 text-sm">
-                    Date
+                    {{ project.created_at }}
                 </td>
 
                 <td class="px-4 py-3 text-xs">

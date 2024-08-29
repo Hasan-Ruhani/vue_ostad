@@ -103,6 +103,7 @@ class userController extends Controller
                 'status' => 'success',
                 'message' => 'User Login Successful',
                 'role' => $user->role,
+                'token' => $token,
             ], 200)->cookie('token', $token, 60 * 24 * 30, '/', null, true, true, false, 'None');
         } else {
             return response()->json([
@@ -111,7 +112,39 @@ class userController extends Controller
             ], 401); // Return 401 Unauthorized for incorrect credentials
         }
     }
+    // cookie('token', $token, 60 * 24 * 30, '/', null, true, true, false, 'None');
+    // ('token', $token, 5/60, '/', null, true, true, false, 'None');
 
+    public function checkTokenValidity(Request $request)   // this function for check token validatoin in frontend
+    {
+        // Retrieve the token from the request cookie
+        $token = $request->cookie('token');
+
+        // Check if the token is provided
+        if (!$token) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Token not provided',
+            ], 401);
+        }
+
+        // Verify the token using the JWTToken helper
+        $result = JWTToken::VerifyToken($token);
+
+        if ($result === 'unauthorized') {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Token is invalid or has expired',
+            ], 401);
+        }
+
+        // If the token is valid, return a success response
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Token is valid',
+            'data' => $result, // You can return the decoded token data if needed
+        ], 200);
+    }
 
 
     function sendOTPCode(Request $request){

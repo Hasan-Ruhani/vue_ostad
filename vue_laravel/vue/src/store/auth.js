@@ -1,40 +1,52 @@
 import axios from 'axios'
+import Cookies from 'js-cookie';
 import { reactive } from "vue";
+import { serverURL } from './server';
 import router from "../router/router";
 import { showToast } from "./Toast";
 
+
 const auth = reactive({
-    
+    user: JSON.parse(localStorage.getItem('user')) || null,
     authenticate(login, password) {
-        fetch('http://127.0.0.1:8000/user-login', {
+        fetch(`${serverURL}/user-login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include',
             body: JSON.stringify({ login, password }),
         })
         .then(res => {
             if (!res.ok) {
-                // If the HTTP status code is not 2xx, throw an error to be caught by .catch
                 return res.json().then(err => { throw err });
             }
             return res.json();
         })
         .then(res => {
             if (res.status === 'success') {
+                Cookies.set('cookieName', 'value');
+
+// Get a cookie
+let cookieValue = Cookies.get('cookieName');
+console.log(cookieValue);
+                this.user = res;
+                localStorage.setItem('user', JSON.stringify(res));
+                localStorage.setItem('token', res.token);
+
                 if (res.role === 'admin65') {
                     showToast('success', 'Admin Login Successfully');
                     setTimeout(() => {
-                        router.push('/') 
-                    }, 500)
+                        router.push('/');
+                    }, 500);
                 } else {
                     showToast('success', res.message);
                     setTimeout(() => {
-                        router.push('/forms') 
-                    }, 500)
+                        router.push('/forms');
+                    }, 500);
                 }
             } else {
-                throw res; // If the status is not 'success', throw the response to be caught by .catch
+                throw res;
             }
         })
         .catch(error => {
@@ -48,41 +60,69 @@ const auth = reactive({
         });
     },
 
-    logout(){
-        axios.get('http://127.0.0.1:8000/user-logout')
-        .then(res => {
-            if (res.data.status === 'success') {
-                showToast('success', res.data.message);
+    isAuthenticated() {
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (!token || !user) {
+            return false; // No token or user stored
+        }
+
+        // Optionally, you could validate the token expiration here by making a request to a protected endpoint
+        return user;
+    },
+
+    checkTokenValidity() {
+        return fetch(`${serverURL}/token`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            credentials: 'include',
+        })
+        .then(response => {
+            if (response.status === 401) {
+                // Token expired or invalid, log the user out
+                this.logout();
+                showToast('error', 'Session expired. Please log in again.');
                 router.push('/login');
-                console.log(res);
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('Token validation error:', error);
+            this.logout();
+            router.push('/login');
+        });
+    },
+
+    logout() {
+        axios.get(`${serverURL}/user-logout`)
+        .then(res => {
+            Cookies.remove('token');
+            if (res.data.status === 'success') {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                this.user = null;
+                showToast('success', res.data.message);
+                setTimeout(() => {
+                    router.push('/login');
+                }, 1000);
             } else {
-                // Handle cases where the status is not 'success' but no error was thrown
                 showToast('error', 'Logout failed. Please try again.');
             }
         })
         .catch(error => {
-            // Enhanced error handling based on common axios error structures
-            if (error.response) {
-                // The request was made, and the server responded with a status code
-                // that falls out of the range of 2xx
-                if (error.response.data.errors) {
-                    error.response.data.errors.forEach(err => {
-                        showToast('error', err);
-                    });
-                } else {
-                    showToast('error', error.response.data.message || 'An error occurred during logout.');
-                }
-            } else if (error.request) {
-                // The request was made but no response was received
-                showToast('error', 'No response from server. Please check your network.');
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                showToast('error', 'Error in setting up the request: ' + error.message);
-            }
+            showToast('error', 'An error occurred during logout.');
             console.error('Logout error:', error);
         });
+    },
+
+    getUserToken(){
+        return auth.user.token;
     }
-    
-})
+});
+
 
 export { auth }

@@ -206,9 +206,9 @@
                 Create Project
             </button>
 
-            <Link href="/projects" class="block w-full px-20 py-2 text-sm font-medium text-center text-white bg-red-500 rounded-md hover:bg-red-600">
+            <RouterLink :to="{ name: 'projects' }" class="block w-full px-20 py-2 text-sm font-medium text-center text-white bg-red-500 rounded-md hover:bg-red-600">
               Cancel
-            </Link>
+            </RouterLink>
           </div>
     </div>
   </main>

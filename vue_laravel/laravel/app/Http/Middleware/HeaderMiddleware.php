@@ -17,8 +17,7 @@ class HeaderMiddleware
     public function handle(Request $request, Closure $next)
     {
         $allowedOrigins = [
-            'http://localhost:5173', 
-            'http://localhost:5174',  // for portfolio
+            'http://localhost:5173'
         ];
 
         $origin = $request->header('Origin');
