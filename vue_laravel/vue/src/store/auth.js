@@ -118,10 +118,6 @@ console.log(cookieValue);
             console.error('Logout error:', error);
         });
     },
-
-    getUserToken(){
-        return auth.user.token;
-    }
 });
 
 
