@@ -1,5 +1,5 @@
 import axios from 'axios'
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 import { reactive } from "vue";
 import { serverURL } from './server';
 import router from "../router/router";
@@ -25,11 +25,6 @@ const auth = reactive({
         })
         .then(res => {
             if (res.status === 'success') {
-                Cookies.set('cookieName', 'value');
-
-// Get a cookie
-let cookieValue = Cookies.get('cookieName');
-console.log(cookieValue);
                 this.user = res;
                 localStorage.setItem('user', JSON.stringify(res));
                 localStorage.setItem('token', res.token);
@@ -100,14 +95,13 @@ console.log(cookieValue);
     logout() {
         axios.get(`${serverURL}/user-logout`)
         .then(res => {
-            Cookies.remove('token');
             if (res.data.status === 'success') {
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
                 this.user = null;
                 showToast('success', res.data.message);
                 setTimeout(() => {
-                    router.push('/login');
+                    router.push('/projects');
                 }, 1000);
             } else {
                 showToast('error', 'Logout failed. Please try again.');

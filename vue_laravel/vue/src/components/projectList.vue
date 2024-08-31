@@ -7,7 +7,7 @@
 
   onBeforeMount(() => {
     axios.get(`${serverURL}/admin/allPortfolio`, {
-        withCredentials: 'include',
+        withCredentials: true,
     })
     .then(res => {
       projects.value = res.data.data;
