@@ -27,21 +27,21 @@
 
   function fetchAllProjects() {
     axios.get('/admin/allPortfolio')
-        .then(response => {
-            if (response.status === 200 && response.data && Array.isArray(response.data.data)) {
-                // Extract the first image for each project
-                projects.value = response.data.data.map(project => ({
-                    ...project,
-                    firstImage: project.images.length > 0 ? project.images[0].filename : ''
-                }));
-            } else {
-              showToast('error', 'Network problem!!');
-            }
-        })
-        .catch(error => {
-          showToast('error', 'May be server down');
-        });
-    }
+      .then(response => {
+          if (response.status === 200 && response.data && Array.isArray(response.data.data)) {
+              // Extract the first image for each project
+              projects.value = response.data.data.map(project => ({
+                  ...project,
+                  firstImage: project.images.length > 0 ? project.images[0].filename : ''
+              }));
+          } else {
+            showToast('error', 'Network problem!!');
+          }
+      })
+      .catch(error => {
+        showToast('error', 'May be server down');
+      });
+  }
 
 
     onBeforeMount(fetchAllProjects);

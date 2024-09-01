@@ -1,22 +1,28 @@
 
-
-    import { ref } from 'vue';
     import axios from 'axios';
+    import { ref } from 'vue';
+    import { serverURL } from './server';
+    import { showToast } from './Toast';
 
-    const categories = ref([]); // Reactive reference for categories
+    const categories = ref([])
 
     const fetchCategories = () => {
-    axios.get('admin/allCategory')
-        .then(response => {
-        if(response.data.status === 'success'){
-            categories.value = response.data.data;
-        }
+        axios.get(`${serverURL}/admin/allCategory`, {
+            withCredentials: true
+        })
+        .then (res => {
+            if(res.data.status === 'success') {
+                categories.value = res.data.data
+            }
         })
         .catch(error => {
-        showToast('error', 'Category server problem!!');
+            showToast('error', 'Category server problem!!')
         });
-    };
+    }
+
+    export { categories, fetchCategories }
+    
 
     
 
-    export { categories, fetchCategories };
+

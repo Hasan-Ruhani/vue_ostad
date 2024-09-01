@@ -1,5 +1,10 @@
 <script setup>
-  
+  import { onMounted } from 'vue'
+  import { categories, fetchCategories } from '../store/category'
+
+  onMounted(() => {
+    fetchCategories()
+  });
 
 
 </script>
@@ -45,11 +50,11 @@
                   class="block appearance-none w-full pr-20 mt-1 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-select rounded-l-md rounded-[5px]"
                   style="-webkit-appearance: none; -moz-appearance: none; appearance: none;"
                 >
-                  <option>
-                    project name
+                  <option v-for="category in categories" :key="category.id" :value="category.id">
+                    {{ category.name }}
                   </option>
                 </select>
-
+                
                 <div 
                   role="button"
                   tabindex="0"

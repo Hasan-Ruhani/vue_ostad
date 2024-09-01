@@ -17,8 +17,8 @@ const routes = [
     {
         path: '/projects',
         name: 'projects',
-        component: Projects
-        // meta: { requiresAuth: true, rolesAllowed: ['admin65'] } // Only admin can access
+        component: Projects,
+        meta: { requiresAuth: true, rolesAllowed: ['admin65'] } // Only admin can access
     },
     {
         path: '/create-project',

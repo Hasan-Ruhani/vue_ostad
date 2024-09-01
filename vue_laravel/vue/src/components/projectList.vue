@@ -1,18 +1,71 @@
 <script setup>
   import axios from 'axios'
+  import { ref, onBeforeMount, computed } from 'vue'
   import { serverURL } from '../store/server'
-  import { ref, onBeforeMount } from 'vue'
+  import { showToast } from '../store/Toast'
 
   const projects = ref([])
+
+  const formattedDate = computed(() => {
+    if( projects.value.length > 0) {
+      const date = new Date(projects.value[0].created_at)
+      return date.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      })
+    }
+    return ''
+  })
+
 
   onBeforeMount(() => {
     axios.get(`${serverURL}/admin/allPortfolio`, {
         withCredentials: true,
     })
     .then(res => {
-      projects.value = res.data.data;
+      if (res.status === 200 && res.data && Array.isArray(res.data.data)) {
+        projects.value = res.data.data.map(project => ({
+          ...project,
+          firstImage: project.images && project.images.length > 0 ? project.images[0].filename : 'Image not found'
+        }));
+      } else {
+          showToast('error', 'Network problem!!');
+      }
+    }) 
+    .catch(error => {
+        showToast('error', 'May be server down');
+    });
+  })
+
+  const toggleStatus = (id, currentStatus) => {
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active'
+
+    axios.post(`${serverURL}/portfolio/status/${id}`, { 
+      status: newStatus
+    }, {
+      withCredentials: true 
     })
-  });
+    .then(res => {
+      if (res.status === 200) {
+        const project = projects.value.find(p => p.id === id)
+        if (project) {
+          project.status = newStatus
+        }
+        showToast('success', `Project now ${newStatus}`)
+      } else {
+        showToast('error', 'Failed to update status')
+      }
+    })
+    .catch(error => {
+      showToast('error', 'Network problem or server issue')
+    })
+  }
+
+    
+
+
+
 
 </script>
 
@@ -76,10 +129,10 @@
 
                 <td class="px-4 py-3">
                   <div class="flex items-center text-sm">
-                    <div class="relative hidden md:block">
+                    <div v-if="project.firstImage" class="relative hidden md:block">
                         <img
                             class="object-cover w-20 h-10 rounded-[10px]"
-                            src="#"
+                            :src="project.firstImage"
                             alt="Project image"
                             loading="lazy"
                         />
@@ -88,14 +141,15 @@
                 </td>
 
                 <td class="px-4 py-3 text-sm">
-                    {{ project.created_at }}
+                    {{ formattedDate }}
                 </td>
 
                 <td class="px-4 py-3 text-xs">
                   <label class="inline-flex items-center cursor-pointer">
                     <input 
                       type="checkbox" 
-                      
+                      :checked="project.status === 'active'"
+                      @change="toggleStatus(project.id, project.status)"
                       class="sr-only peer"
                     >
                     <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>

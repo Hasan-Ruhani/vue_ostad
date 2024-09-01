@@ -227,6 +227,15 @@ class userController extends Controller
     // function userLogout(){
     //     return redirect('/') -> cookie('token', '', -1);
     // }
+
+    // function userLogout() {
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'message' => 'Logout successfully'
+    //     ], 200)->cookie('token', '', -1, null, null, false, true, 'Lax'); // Set 'SameSite' to 'None'
+    // }
+    
+    
 }
 
 

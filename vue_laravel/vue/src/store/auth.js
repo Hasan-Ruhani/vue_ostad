@@ -55,6 +55,30 @@ const auth = reactive({
         });
     },
 
+    logout() {
+        axios.get(`${serverURL}/user-logout`, {
+            withCredentials: true
+        })
+        .then(res => {
+            if (res.data.status === 'success') {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                this.user = null;
+                showToast('success', res.data.message);
+                setTimeout(() => {
+                    router.push('/login');
+                }, 1000);
+            } else {
+                showToast('error', 'Logout failed. Please try again.');
+            }
+        })
+        .catch(error => {
+            showToast('error', 'An error occurred during logout.');
+            console.error('Logout error:', error);
+        });
+    },
+    
+
     isAuthenticated() {
         const token = localStorage.getItem('token');
         const user = JSON.parse(localStorage.getItem('user'));
@@ -92,26 +116,7 @@ const auth = reactive({
         });
     },
 
-    logout() {
-        axios.get(`${serverURL}/user-logout`)
-        .then(res => {
-            if (res.data.status === 'success') {
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                this.user = null;
-                showToast('success', res.data.message);
-                setTimeout(() => {
-                    router.push('/projects');
-                }, 1000);
-            } else {
-                showToast('error', 'Logout failed. Please try again.');
-            }
-        })
-        .catch(error => {
-            showToast('error', 'An error occurred during logout.');
-            console.error('Logout error:', error);
-        });
-    },
+    
 });
 
 
