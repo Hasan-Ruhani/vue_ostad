@@ -1,11 +1,17 @@
 <script setup>
-  import { onMounted } from 'vue'
+  import { ref, onMounted } from 'vue'
   import { categories, fetchCategories } from '../store/category'
+  import categoryModal from './category_modal.vue'
 
   onMounted(() => {
     fetchCategories()
   });
-
+  const categoryModalRef = ref(null)
+  function openCategoryModal() {
+    if(categoryModalRef.value) {
+      categoryModalRef.value.openModal()
+    }
+  }
 
 </script>
 
@@ -58,8 +64,8 @@
                 <div 
                   role="button"
                   tabindex="0"
-                  
-                  
+                  @click="openCategoryModal"
+                  @keydown.enter="openCategoryModal"
                   class="absolute inset-y-0 right-0 px-4 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-r-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex items-center justify-center" 
                   style="cursor: pointer; height: 100%;"
                 >
@@ -68,7 +74,7 @@
 
 
                 <!-- Include the modal component -->
-                <CategoryModal ref="categoryModalRef" />
+                <categoryModal ref="categoryModalRef" />
               </div>
             </label>
 
