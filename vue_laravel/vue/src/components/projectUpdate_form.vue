@@ -2,11 +2,16 @@
   import axios from 'axios'
   import { ref, onMounted, reactive } from 'vue'
   import draggable from 'vuedraggable'
+  import { useRoute } from 'vue-router'
   import { serverURL } from '../store/server'
   import { categories, fetchCategories } from '../store/category'
   import { showToast } from '../store/Toast'
   import categoryModal from './category_modal.vue'
   import loadingOverlay from './loadingOverlay.vue';
+
+  const route = useRoute()
+  const id = route.params.id
+  console.log(id)
 
   onMounted(() => {
     fetchCategories()

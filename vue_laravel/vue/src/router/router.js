@@ -3,6 +3,7 @@ import { auth } from '../store/auth';
 import Dashboard from '../views/dashboard.vue';
 import Projects from '../views/projectList.vue';
 import createProject from '../views/projectForms.vue';
+import updateProject from '../views/projectUpdate_form.vue'
 import Form from '../views/forms.vue';
 import Login from '../views/login.vue';
 import Registration from '../views/registration.vue';
@@ -24,6 +25,12 @@ const routes = [
         path: '/create-project',
         name: 'createProject',
         component: createProject,
+        meta: { requiresAuth: true, rolesAllowed: ['admin65'] } // Only admin can access
+    },
+    {
+        path: '/update-project/:id',
+        name: 'updateProject',
+        component: updateProject,
         meta: { requiresAuth: true, rolesAllowed: ['admin65'] } // Only admin can access
     },
     {
