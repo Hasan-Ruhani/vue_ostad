@@ -17,6 +17,7 @@ import axios from 'axios';
       post.description = data.description;
       post.image = data.image;
     });
+    
 
     // axios.get(`https://fakestoreapi.com/products/${id}`)         // use axios call
     // .then(res => {

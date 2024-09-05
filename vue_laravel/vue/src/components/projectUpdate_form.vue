@@ -46,6 +46,7 @@
     });
     selectedCategoryId.value = null; // Clear selected category
   }
+  
 
   const newTag = ref('');
   const newSolution = ref('');
