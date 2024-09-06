@@ -1,6 +1,6 @@
 <script setup>
   import axios from 'axios'
-  import { ref, onMounted, reactive } from 'vue'
+  import { ref, reactive, onMounted, onBeforeMount } from 'vue'
   import draggable from 'vuedraggable'
   import { useRoute } from 'vue-router'
   import { serverURL } from '../store/server'
@@ -11,7 +11,37 @@
 
   const route = useRoute()
   const id = route.params.id
-  console.log(id)
+  const form = reactive({
+    head_line: "",
+    description: "",
+    client: "",
+    project_url: "",
+    problem: "",
+    result: "",
+    duration: "",
+    images: [],
+    tags: [],
+    solutions: []
+  })
+  onBeforeMount(() => {
+    axios.get(`${serverURL}/admin/portfolioDetail/${id}`, {
+      withCredentials: true
+    })
+    .then(res => {
+      if(res.data.status === 'success'){
+        Object.assign(form, res.data.data);
+      }
+      else if (res.data.status === 404) {
+        showToast('error', res.message || 'Resource not found')
+      } 
+      else{ 
+        showToast('error', 'May be server down')
+      }
+    })
+    .catch(error => {
+      showToast('error', 'Session expired. Try again')
+    })
+  })
 
   onMounted(() => {
     fetchCategories()
@@ -23,18 +53,6 @@
     }
   }
 
-  const form = reactive({
-    head_line: "this is head line",
-    description: "this is description",
-    client: "this is clinent",
-    project_url: "https://www.facebook.com/",
-    problem: "thsi is problem",
-    result: "this is result",
-    duration: "1 years",
-    images: [],
-    tags: ['help', 'blog'],
-    solutions: ['critical error', 'response error', 'time']
-  })
 
   const resetForm = () => {
     Object.keys(form).forEach(key => {
@@ -284,7 +302,7 @@ function prepareFormData() {
                 <div class="flex flex-wrap items-center gap-2 p-2 bg-transparent border border-gray-600 rounded-lg focus-within:ring-2 focus-within:ring-purple-400">
                   <!-- Display the current solutions within the input -->
                   <span v-for="(solution, index) in form.solutions" :key="index" class="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded-full flex items-center">
-                    {{ solution }}
+                    {{ solution.name || solution }}
                     <button @click.stop="removeSolution($event, index)" class="ml-2 text-green-800 hover:text-green-600">
                       &times;
                     </button>
@@ -304,7 +322,7 @@ function prepareFormData() {
                 <div class="flex flex-wrap items-center gap-2 p-2 bg-transparent border border-gray-600 rounded-lg focus-within:ring-2 focus-within:ring-purple-400">
                   <!-- Display the current tags within the input -->
                   <span v-for="(tag, index) in form.tags" :key="index" class="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded-full flex items-center">
-                    {{ tag }}
+                    {{ tag.name || tag }} 
                     <button @click.stop="removeTag($event, index)" class="ml-2 text-blue-800 hover:text-blue-600">
                       &times;
                     </button>
