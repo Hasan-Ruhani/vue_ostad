@@ -16,6 +16,7 @@
     description: "",
     client: "",
     project_url: "",
+    category: "",
     problem: "",
     result: "",
     duration: "",
@@ -30,6 +31,7 @@
     .then(res => {
       if(res.data.status === 'success'){
         Object.assign(form, res.data.data);
+        selectedCategoryId.value = form.category.id
       }
       else if (res.data.status === 404) {
         showToast('error', res.message || 'Resource not found')
@@ -42,6 +44,7 @@
       showToast('error', 'Session expired. Try again')
     })
   })
+  
 
   onMounted(() => {
     fetchCategories()
@@ -153,7 +156,7 @@ function prepareFormData() {
     const formData = prepareFormData();  // Get prepared FormData from the function
 
     try {
-        const response = await axios.post(`${serverURL}/admin/portfolioItem/${selectedCategoryId.value}`, formData, {
+        const response = await axios.post(`${serverURL}/admin/portfolioItem_update/${id}`, formData, {
           headers: {
               'Content-Type': 'multipart/form-data'
           },
@@ -161,10 +164,10 @@ function prepareFormData() {
         })
 
         if (response.data.status === 'success') {
-            showToast('success', response.data.message || 'Portfolio item created successfully');
-            resetForm()
+            showToast('success', response.data.message || 'Portfolio update successfully');
+            // resetForm()
         } else {
-            showToast('error', response.data.message || 'Failed to create portfolio item');
+            showToast('error', response.data.message || 'Failed to update portfolio');
         }
     } catch (error) {
         if (error.response) {
@@ -250,7 +253,6 @@ function prepareFormData() {
                 >
                   +
                 </div>
-
 
                 <!-- Include the modal component -->
                 <categoryModal ref="categoryModalRef" />
@@ -376,7 +378,8 @@ function prepareFormData() {
                   :key="index"
                   class="relative w-24 h-24"
                 >
-                  <img :src="element.url" class="object-cover w-full h-full rounded" alt="Preview">
+                  <!-- <img :src="element.url" class="object-cover w-full h-full rounded" alt="Preview"> -->
+                    <img :src="element.filename || element.url" class="object-cover w-full h-full rounded" alt="Preview">
                   <button 
                     @click="() => removeImage(index)"
                     @keydown.enter="() => removeImage(index)"
