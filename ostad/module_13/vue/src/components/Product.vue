@@ -23,7 +23,6 @@ import axios from 'axios';
 </script>
 
 <template>
-
   <h1 class="text-xl mb-2">This is Product Details</h1>
   <article class="text-left mb-10">
 
