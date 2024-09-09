@@ -16,7 +16,7 @@
     description: "",
     client: "",
     project_url: "",
-    category: "",
+    category_id: "",
     problem: "",
     result: "",
     duration: "",
@@ -32,6 +32,8 @@
       if(res.data.status === 'success'){
         Object.assign(form, res.data.data);
         selectedCategoryId.value = form.category.id
+        form.category_id = selectedCategoryId
+        console.log('images', form.images)
       }
       else if (res.data.status === 404) {
         showToast('error', res.message || 'Resource not found')
@@ -105,23 +107,30 @@
     }
 }
 
-function prepareFormData() {
-  const formData = new FormData();
-  Object.keys(form).forEach(key => {
-      if (Array.isArray(form[key])) {
-          form[key].forEach((item) => {
-              if (key === 'images' && item.file) {
-                  formData.append('images[]', item.file);
-              } else {
-                  formData.append(`${key}[]`, item);
-              }
-          });
-      } else {
-          formData.append(key, form[key]);
-      }
-  });
-  return formData;
-}
+  function prepareFormData() {
+    const formData = new FormData();
+    Object.keys(form).forEach(key => {
+        if (Array.isArray(form[key])) {
+            form[key].forEach((item) => {
+                // if (key === 'images' && item.file) {
+                if (key === 'images') {
+                    formData.append('images[]', item.file);
+                }  else if (key === 'solutions' && item.name) {
+                    formData.append('solutions[]', item.name);
+                } else if (key === 'tags' && item.name) {
+                    formData.append('tags[]', item.name);
+                }
+                else {
+                    formData.append(`${key}[]`, item);
+                }
+            });
+        } else {
+            formData.append(key, form[key]);
+        }
+    });
+    return formData;
+  }
+
 
 
   function handleFileUpload(event) {
