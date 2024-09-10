@@ -216,26 +216,31 @@ class portfolioController extends Controller
         }
 
         // Handle images
-        if ($request->hasFile('images')) {
-            // Detach and delete current images from Cloudinary and database
-            $currentImages = $portfolio->images;
-            foreach ($currentImages as $currentImage) {
-                Cloudinary::destroy($currentImage->filename); // Remove from Cloudinary
-                $currentImage->delete(); // Remove from database
+        if ($request->has('removed_images')) {
+            // Remove the images that the user has marked for deletion
+            foreach ($request->removed_images as $imageUrl) {
+                $image = Image::where('filename', $imageUrl)->first();
+                if ($image) {
+                    Cloudinary::destroy($image->filename); // Remove from Cloudinary
+                    $image->delete(); // Remove from database
+                }
             }
-
+        }
+        
+        if ($request->hasFile('images')) {
             // Upload new images to Cloudinary and save to database
             foreach ($request->file('images') as $file) {
                 $uploadedImageUrl = Cloudinary::upload($file->getRealPath(), [
                     'folder' => 'cfs_mirzaovi/portfolio_images'
                 ])->getSecurePath();
-
+        
                 Image::create([
                     'portfolio_id' => $portfolio->id,
                     'filename' => $uploadedImageUrl
                 ]);
             }
         }
+        
 
         return response()->json([
             'status' => 'success',

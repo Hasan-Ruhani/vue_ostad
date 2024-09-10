@@ -6,6 +6,7 @@
   import { serverURL } from '../store/server'
   import { categories, fetchCategories } from '../store/category'
   import { showToast } from '../store/Toast'
+  import router from '../router/router'
   import categoryModal from './category_modal.vue'
   import loadingOverlay from './loadingOverlay.vue';
 
@@ -24,33 +25,38 @@
     tags: [],
     solutions: []
   })
+
   onBeforeMount(() => {
     axios.get(`${serverURL}/admin/portfolioDetail/${id}`, {
       withCredentials: true
-    })
-    .then(res => {
-      if(res.data.status === 'success'){
+    }).then(res => {
+      if (res.data.status === 'success') {
         Object.assign(form, res.data.data);
-        selectedCategoryId.value = form.category.id
-        form.category_id = selectedCategoryId
-        console.log('images', form.images)
-      }
+        selectedCategoryId.value = form.category.id;
+        form.category_id = selectedCategoryId;
+
+        // Correctly map images
+        form.images = form.images.map(image => {
+          return { url: image.filename }; // Use the correct property
+        })
+      } 
       else if (res.data.status === 404) {
         showToast('error', res.message || 'Resource not found')
       } 
-      else{ 
-        showToast('error', 'May be server down')
+      else { 
+        showToast('error', 'Server may be down')
       }
-    })
-    .catch(error => {
+    }).catch(error => {
       showToast('error', 'Session expired. Try again')
     })
   })
+
   
 
   onMounted(() => {
     fetchCategories()
-  });
+  })
+
   const categoryModalRef = ref(null)
   function openCategoryModal() {
     if(categoryModalRef.value) {
@@ -64,10 +70,10 @@
         if (Array.isArray(form[key])) {
             form[key] = []; // Reset arrays to empty
         } else {
-            form[key] = ''; // Reset strings to empty
+            form[key] = '' // Reset strings to empty
         }
-    });
-    selectedCategoryId.value = null; // Clear selected category
+    })
+    selectedCategoryId.value = null // Clear selected category
   }
   
 
@@ -107,51 +113,74 @@
     }
 }
 
-  function prepareFormData() {
-    const formData = new FormData();
-    Object.keys(form).forEach(key => {
-        if (Array.isArray(form[key])) {
-            form[key].forEach((item) => {
-                // if (key === 'images' && item.file) {
-                if (key === 'images') {
-                    formData.append('images[]', item.file);
-                }  else if (key === 'solutions' && item.name) {
-                    formData.append('solutions[]', item.name);
-                } else if (key === 'tags' && item.name) {
-                    formData.append('tags[]', item.name);
-                }
-                else {
-                    formData.append(`${key}[]`, item);
-                }
-            });
-        } else {
-            formData.append(key, form[key]);
-        }
-    });
-    return formData;
-  }
+  const removedImages = ref([]);
+  function removeImage(index) {
+    const removedImage = form.images[index];
 
+    // Check if the image is an existing image (i.e., has only a URL and no 'file')
+    if (!removedImage.file && removedImage.url) {
+      // Track removed images that should be deleted from the server
+      removedImages.value.push(removedImage.url)
+    }
+
+    // Remove the image from the form's images array
+    form.images.splice(index, 1)
+  }
 
 
   function handleFileUpload(event) {
     const files = Array.from(event.target.files);
     files.forEach(file => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            form.images.push({
-                file: file, // The actual file object to be sent to the server
-                url: e.target.result // URL used for previews on the client side
-            });
-        };
-        reader.readAsDataURL(file);
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        form.images.push({
+          file: file, // The new file
+          url: e.target.result // Preview URL
+        })
+      }
+      reader.readAsDataURL(file)
+    })
+    event.target.value = '' // Clear the input
+  }
+
+
+  function prepareFormData() {
+    const formData = new FormData();
+
+    // Add regular form fields
+    Object.keys(form).forEach(key => {
+      if (Array.isArray(form[key])) {
+        form[key].forEach(item => {
+          if (key === 'images') {
+            // Handle images
+            if (item.file) {
+              formData.append('images[]', item.file); // New files to upload
+            } else if (item.url) {
+              formData.append('existing_images[]', item.url); // Keep existing images
+            }
+          } else if (key === 'solutions' || key === 'tags') {
+            // Only append the 'name' if it's an object, otherwise append the value
+            if (typeof item === 'object' && item !== null && item.name) {
+              formData.append(`${key}[]`, item.name); // Append the name if it's an object
+            } else {
+              formData.append(`${key}[]`, item); // Append the value directly if it's not an object
+            }
+          }
+        });
+      } else {
+        formData.append(key, form[key]);
+      }
     });
-    event.target.value = ''; // Clear the file input after files are added
+
+    // Append removed image URLs if any
+    removedImages.value.forEach(url => {
+      formData.append('removed_images[]', url);
+    });
+
+    return formData;
   }
 
 
-  function removeImage(index) {
-    form.images.splice(index, 1);
-  }
 
     const isLoading = ref(false);         // blur overlay wehen creating project
     const selectedCategoryId = ref(null);
@@ -173,8 +202,8 @@
         })
 
         if (response.data.status === 'success') {
-            showToast('success', response.data.message || 'Portfolio update successfully');
-            // resetForm()
+            showToast('success', response.data.message || 'Portfolio update successfully')
+            router.push('/projects')
         } else {
             showToast('error', response.data.message || 'Failed to update portfolio');
         }
@@ -198,8 +227,6 @@
         isLoading.value = false
       }
     }
-
-
 
 
 </script>
@@ -405,11 +432,11 @@
         </div>
         <div class="flex justify-between gap-5">
             <button @click="createProject()" type="submit" class="block w-full px-20 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-500 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                Create Project
+                Save Change
             </button>
 
             <button @click="resetForm()" class="block w-full px-20 py-2 text-sm font-medium text-center text-white bg-red-500 rounded-md hover:bg-red-600">
-              Cancel
+              Empty Form
             </button>
           </div>
     </div>
