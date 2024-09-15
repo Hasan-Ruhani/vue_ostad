@@ -7,6 +7,7 @@ const isModalOpen = ref(false)
 const modalTitle = ref('Alert')
 const modalMessage = ref('')
 
+
 // Function to open the modal
 function openModal(type) {
   isModalOpen.value = true

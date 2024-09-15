@@ -227,7 +227,6 @@ function prepareFormData() {
                   +
                 </div>
 
-
                 <!-- Include the modal component -->
                 <categoryModal ref="categoryModalRef" />
               </div>
