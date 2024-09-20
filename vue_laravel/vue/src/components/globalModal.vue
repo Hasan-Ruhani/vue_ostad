@@ -45,6 +45,7 @@ function handleAlert() {
 }
 </script>
 
+
 <template>
   <div class="space-x-4">
     <!-- Buttons to open modal -->
