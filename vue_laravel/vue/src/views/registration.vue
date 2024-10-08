@@ -1,5 +1,11 @@
 <script setup>
+  import  { auth }  from '../store/auth'
+  import { ref } from 'vue'
 
+  const name = ref('hasan@gmail.com')
+  const email = ref('hasan@gmail.com')
+  const password = ref('12345678')
+  const confirm = ref('12345678')
 
 </script>
 
@@ -38,7 +44,7 @@
 
                 <label class="block text-sm">
                   <span class="text-gray-700 dark:text-gray-400">Full Name</span>
-                  <input id="name"
+                  <input id="name" v-model="name"
                     class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
                     placeholder="Jane Doe"
                   />
@@ -46,7 +52,7 @@
 
                 <label class="block text-sm">
                   <span class="text-gray-700 dark:text-gray-400">Email</span>
-                  <input id="email"
+                  <input id="email" v-model="email"
                     class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
                     placeholder="jane@doe.com"
                   />
@@ -54,7 +60,7 @@
 
                 <label class="block mt-4 text-sm">
                   <span class="text-gray-700 dark:text-gray-400">Password</span>
-                  <input id="password"
+                  <input id="password" v-model="password"
                     class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
                     placeholder="***************"
                     type="password"
@@ -65,7 +71,7 @@
                   <span class="text-gray-700 dark:text-gray-400">
                     Confirm password
                   </span>
-                  <input
+                  <input v-model="confirm"
                     class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
                     placeholder="***************"
                     type="password"
@@ -125,13 +131,14 @@
                 Twitter
               </button>
 
-              <p class="mt-4">
-                <Link
+              <p class="mt-2 text-sm font-bold font-light text-gray-200">
+                Already have an account?
+                <RouterLink
                   class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  href="/login"
+                  :to="{ name: 'login' }"
                 >
-                  Already have an account? Login
-              </Link>
+                  Login
+              </RouterLink>
               </p>
             </div>
           </div>

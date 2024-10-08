@@ -100,13 +100,14 @@
                 Forgot your password?
               </a>
             </p>
-            <p class="mt-1">
-              <Link
+            <p class="mt-1 text-sm font-bold font-light text-gray-200">
+              Don’t have an account yet?
+              <RouterLink
                 class="text-sm font-medium text-purple-400 hover:underline"
-                href="/registration"
+                :to="{ name: 'registration' }"
               >
-                Create account
-              </Link>
+                Sign up
+              </RouterLink>
             </p>
           </div>
         </div>
