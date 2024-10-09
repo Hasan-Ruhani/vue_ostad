@@ -119,49 +119,51 @@ function prepareFormData() {
 
     const isLoading = ref(false);         // blur overlay wehen creating project
     const selectedCategoryId = ref(null);
+
+
     const createProject = async () => {
-    if (!selectedCategoryId.value) {
-      showToast('error', 'Category not selected');
-      return;
-    }
-
-    isLoading.value = true
-    const formData = prepareFormData();  // Get prepared FormData from the function
-
-    try {
-        const response = await axios.post(`${serverURL}/admin/portfolioItem/${selectedCategoryId.value}`, formData, {
-          headers: {
-              'Content-Type': 'multipart/form-data'
-          },
-          withCredentials: true
-        })
-
-        if (response.data.status === 'success') {
-            showToast('success', response.data.message || 'Portfolio item created successfully');
-            resetForm()
-        } else {
-            showToast('error', response.data.message || 'Failed to create portfolio item');
-        }
-    } catch (error) {
-        if (error.response) {
-            const { status, data } = error.response;
-            if (status === 400 && data.message) {
-                showToast('error', data.message);
-            } else if (data.errors) {
-                Object.values(data.errors).forEach(err => {
-                    showToast('error', err[0]);
-                });
-            } else {
-                showToast('error', 'An unexpected error occurred.');
-            }
-        } else {
-            showToast('error', 'Network problem or server not responding.');
-        }
+      if (!selectedCategoryId.value) {
+        showToast('error', 'Category not selected');
+        return;
       }
-      finally {
-        isLoading.value = false
-      }
-    }
+
+      isLoading.value = true
+      const formData = prepareFormData();  // Get prepared FormData from the function
+
+      try {
+          const response = await axios.post(`${serverURL}/admin/portfolioItem/${selectedCategoryId.value}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+            withCredentials: true
+          })
+
+          if (response.data.status === 'success') {
+              showToast('success', response.data.message || 'Portfolio item created successfully');
+              resetForm()
+          } else {
+              showToast('error', response.data.message || 'Failed to create portfolio item');
+          }
+        } catch (error) {
+          if (error.response) {
+              const { status, data } = error.response;
+              if (status === 400 && data.message) {
+                  showToast('error', data.message);
+              } else if (data.errors) {
+                  Object.values(data.errors).forEach(err => {
+                      showToast('error', err[0]);
+                  });
+              } else {
+                  showToast('error', 'An unexpected error occurred.');
+              }
+          } else {
+              showToast('error', 'Network problem or server not responding.');
+          }
+        }
+        finally {
+          isLoading.value = false
+        }
+     }
 
 
 

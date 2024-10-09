@@ -5,6 +5,11 @@
   const login = ref('hasan@gmail.com')
   const password = ref('12345678')
 
+  const showPassword = ref(false);
+  const toggleShow = () => {
+    showPassword.value = !showPassword.value;
+  };
+
 </script>
 
 <template>
@@ -40,13 +45,52 @@
                 placeholder="Jane Doe"
               />
             </label>
+            
             <label class="block mt-4 text-sm">
               <span class="text-gray-400">Password</span>
-              <input id="password" v-model="password"
-                class="block w-full mt-1 text-sm border-gray-600 bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple text-gray-300 form-input"
-                placeholder="***************"
-                type="password"
-              />
+              <div class="relative">
+                <input
+                  id="password"
+                  v-model="password"
+                  :type="showPassword ? 'text' : 'password'"
+                  class="block w-full mt-1 text-sm border-gray-600 bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple text-gray-300 form-input"
+                  placeholder="***************"
+                />
+                <button
+                  type="button"
+                  @click="toggleShow"
+                  class="absolute inset-y-0 right-0 flex items-center px-2 text-gray-400 hover:text-gray-200"
+                >
+                  <svg
+                    v-if="showPassword"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M13.875 18.825A7.968 7.968 0 0 1 12 19c-3.866 0-7.2-2.53-9-6 1.432-2.724 3.852-5 6.43-5.882m4.55 9.024l5.03 5.03M3.707 4.293a1 1 0 0 1 1.414 0l14.142 14.142a1 1 0 0 1-1.414 1.414L3.707 5.707a1 1 0 0 1 0-1.414z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  <svg
+                    v-else
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M1 12C1 12 5 4 12 4s11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
             </label>
 
             <button @click="auth.authenticate(login, password)" type="submit" class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">

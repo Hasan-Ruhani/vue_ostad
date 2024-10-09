@@ -113,7 +113,7 @@
         >
           <img
             class="object-cover w-8 h-8 rounded-full"
-            src="https://images.unsplash.com/photo-1502378735452-bc7d86632805?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=aa3a807e1bbdfd4364d1f449eaa96d82"
+            src="https://res.cloudinary.com/di3vqfy5i/image/upload/v1728488977/H_A_S_A_N_izwcor.png"
             alt="Profile Image"
             aria-hidden="true"
           />

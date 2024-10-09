@@ -1,22 +1,19 @@
+
 <script setup>
   import axios from 'axios'
   import { ref, onBeforeMount, computed } from 'vue'
   import { serverURL } from '../store/server'
   import { showToast } from '../store/Toast'
-  import { ModalsContainer, useModal } from 'vue-final-modal'
-  import MyModal from './globalModal.vue';
+  import DeleteModal from './delete_modal.vue';
+  import { fetchProjects } from '../store/projectList';
 
-const { open, close } = useModal({
-  component: MyModal
-})
+  const deleteModal = ref(null);
 
-  const showDeleteModal = () => {
-    deleteModal.value.openModal()
-  }
-
-  const showUpdateModal = () => {
-    updateModal.value.openModal()
-  }
+  const openDeleteModal = (id) => {
+    if (deleteModal.value && deleteModal.value.openModal) {
+      deleteModal.value.openModal(id);
+    }
+  };
 
   const projects = ref([])
 
@@ -32,24 +29,11 @@ const { open, close } = useModal({
     return ''
   })
 
-  onBeforeMount(() => {
-    axios.get(`${serverURL}/admin/allPortfolio`, {
-        withCredentials: true,
-    })
-    .then(res => {
-      if (res.status === 200 && res.data && Array.isArray(res.data.data)) {
-        projects.value = res.data.data.map(project => ({
-          ...project,
-          firstImage: project.images && project.images.length > 0 ? project.images[0].filename : 'Image not found'
-        }));
-      } else {
-          showToast('error', 'Network problem!!');
-      }
-    }) 
-    .catch(error => {
-        showToast('error', 'May be server down');
-    });
-  })
+
+    onBeforeMount(async () => {
+    projects.value = await fetchProjects();
+    console.log("modal is close")
+  });
 
   const toggleStatus = (id, currentStatus) => {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active'
@@ -75,11 +59,6 @@ const { open, close } = useModal({
     })
   }
 
-    
-
-
-
-
 </script>
 
 <!-- bg-gray-80 -->
@@ -89,9 +68,12 @@ const { open, close } = useModal({
       <h2
         class="my-4 text-2xl font-semibold text-gray-200"
       >
-        Projects
+        <!-- Projects -->
+        <a href="https://codeforsite.com/" target="_blank" rel="noopener noreferrer" class="text-xm text-green-300 hover:text-green-600 underline font-medium">
+          Visit Site->
+        </a>
+
       </h2>
-      
       <div class="my-5">
         <RouterLink :to="{ name: 'createProject' }"
           class="flex items-center justify-between w-[150px] px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
@@ -101,6 +83,7 @@ const { open, close } = useModal({
         </RouterLink>
       </div>
 
+    <DeleteModal ref="deleteModal" />
       <!-- New Table -->
       <div class="w-full overflow-hidden rounded-lg shadow-xs">
         <div class="w-full overflow-x-auto">
@@ -165,11 +148,12 @@ const { open, close } = useModal({
                     </svg>
                   </RouterLink>
                   <!-- <ModalsContainer /> -->
-                  <button class="mr-2">
+                  <button  @click="openDeleteModal(project.id)"   class="mr-2">
                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg" style="font-size: 15px; margin: auto;">
                       <path d="M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41 0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z"></path>
                     </svg>
                   </button>
+                  
                 </td>
               </tr>    
             </tbody>
@@ -179,7 +163,6 @@ const { open, close } = useModal({
     </div>
   </main>
 </template>
-
 
 <style scoped>
 

@@ -336,7 +336,7 @@
               <div class="flex flex-wrap items-center gap-2 p-2 bg-transparent border border-gray-600 rounded-lg focus-within:ring-2 focus-within:ring-purple-400">
                 <!-- Display the current solutions within the input -->
                 <span v-for="(solution, index) in form.solutions" :key="index" class="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded-full flex items-center">
-                  {{ solution }}
+                  {{ solution.name || solution }}
                   <button @click.stop="removeSolution($event, index)" class="ml-2 text-green-800 hover:text-green-600">
                     &times;
                   </button>
@@ -356,7 +356,7 @@
               <div class="flex flex-wrap items-center gap-2 p-2 bg-transparent border border-gray-600 rounded-lg focus-within:ring-2 focus-within:ring-purple-400">
                 <!-- Display the current tags within the input -->
                 <span v-for="(tag, index) in form.tags" :key="index" class="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded-full flex items-center">
-                  {{ tag }}
+                  {{ tag.name || tag }}
                   <button @click.stop="removeTag($event, index)" class="ml-2 text-blue-800 hover:text-blue-600">
                     &times;
                   </button>
