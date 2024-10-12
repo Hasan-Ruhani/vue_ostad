@@ -19,7 +19,8 @@ class PortfolioDetail extends Model
         'project_url',
         'problem',
         'result',
-        'status'
+        'status',
+        'created_at'
     ];
 
     protected $casts = [

@@ -7,7 +7,6 @@ use Inertia\Inertia;
 
 class categoryController extends Controller
 {
-    
     public function allCategory()
     {
         // Retrieve only categories with an active status

@@ -1,4 +1,92 @@
 <script setup>
+import { onMounted, nextTick } from 'vue';
+
+onMounted(() => {
+  nextTick(() => {
+    // Doughnut/Pie chart setup
+    const pieChartCtx = document.getElementById('pie');
+    if (pieChartCtx) {
+      new Chart(pieChartCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Shirts', 'Shoes', 'Bags'],
+          datasets: [{
+            data: [30, 20, 50],
+            backgroundColor: ['#1E3A8A', '#0D9488', '#6D28D9'],
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false,
+            }
+          }
+        }
+      });
+    }
+
+    // Line chart setup
+    const lineChartCtx = document.getElementById('line');
+    if (lineChartCtx) {
+      new Chart(lineChartCtx, {
+        type: 'line',
+        data: {
+          labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+          datasets: [{
+            label: 'Organic',
+            borderColor: '#0D9488',
+            backgroundColor: '#0D9488',
+            data: [65, 59, 80, 81, 56, 55],
+          },
+          {
+            label: 'Paid',
+            borderColor: '#6D28D9',
+            backgroundColor: '#6D28D9',
+            data: [28, 48, 40, 19, 86, 27],
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false,
+            }
+          }
+        }
+      });
+    }
+
+    // Bar chart setup
+    const barChartCtx = document.getElementById('bars');
+    if (barChartCtx) {
+      new Chart(barChartCtx, {
+        type: 'bar',
+        data: {
+          labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+          datasets: [{
+            label: 'Shoes',
+            backgroundColor: '#0D9488',
+            data: [12, 19, 3, 5, 2, 3],
+          },
+          {
+            label: 'Bags',
+            backgroundColor: '#6D28D9',
+            data: [2, 3, 20, 5, 1, 4],
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false,
+            }
+          }
+        }
+      });
+    }
+  });
+});
 
 </script>
 

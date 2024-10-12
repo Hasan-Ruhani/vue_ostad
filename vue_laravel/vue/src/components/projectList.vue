@@ -16,23 +16,8 @@
   };
 
   const projects = ref([])
-
-  const formattedDate = computed(() => {
-    if( projects.value.length > 0) {
-      const date = new Date(projects.value[0].created_at)
-      return date.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric'
-      })
-    }
-    return ''
-  })
-
-
-    onBeforeMount(async () => {
+  onBeforeMount(async () => {
     projects.value = await fetchProjects();
-    console.log("modal is close")
   });
 
   const toggleStatus = (id, currentStatus) => {
@@ -128,7 +113,11 @@
                   </div>
                 </td>
                 <td class="px-4 py-3 text-sm">
-                    {{ formattedDate }}
+                  {{ new Date(project.created_at).toLocaleDateString('en-GB', { 
+                      day: '2-digit', 
+                      month: 'long', 
+                      year: 'numeric' 
+                  }) }}
                 </td>
                 <td class="px-4 py-3 text-xs">
                   <label class="inline-flex items-center cursor-pointer">

@@ -37,7 +37,7 @@ const auth = reactive({
                 } else {
                     showToast('success', res.message);
                     setTimeout(() => {
-                        router.push('/forms');
+                        window.location.href = 'https://codeforsite.com/';
                     }, 500);
                 }
             } else {
