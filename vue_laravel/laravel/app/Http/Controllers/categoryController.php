@@ -18,5 +18,4 @@ class categoryController extends Controller
         ]);
     }
 
-
 }

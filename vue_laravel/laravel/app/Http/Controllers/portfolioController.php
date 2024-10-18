@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Validator;
 class portfolioController extends Controller
 {
 
-
     public function allPortfolio()
     {
         // Eager load 'solutions', 'tags', and 'images' relationships with 'portfolioDetails'

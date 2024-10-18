@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Validator;
 class contactController extends Controller
 {
 
-
     // public function createSpcContact(Request $request){
 
     //     $user_id = $request -> header('id');
